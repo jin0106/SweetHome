@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import anonymous from "assets/anonymous.jpg";
 import { useDispatch } from "react-redux";
 import { SET_ARTICLE_NUM } from "store/comment";
+import { articleAxios } from "utils/articleAxios";
 
 function ArticleDetail() {
 	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -38,14 +39,12 @@ function ArticleDetail() {
 		});
 	};
 
-	const getArticle = () => {
-		axios({
-			url: `${SERVER_URL}/api/apts/${user.apt.apt_id}/boards/articles/${articleId}`,
-			method: "get",
-		}).then((res) => {
+	const getArticle = async () => {
+		const res = await articleAxios(user.apt.apt_id, articleId, "get");
+		if (res) {
 			setArticle(res.data);
 			setComment(res.data.total_replies);
-		});
+		}
 	};
 
 	const handleHeartClick = () => {
