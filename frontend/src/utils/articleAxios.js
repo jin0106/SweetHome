@@ -5,7 +5,8 @@ const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 export function articleAxios(aptId, articleId, method) {
 	const response = axios({
 		url: `${SERVER_URL}/api/apts/${aptId}/boards/articles/${articleId}`,
-		method: method,
+		method,
+		headers: { "Content-Type": "application/json" },
 	});
 	return response;
 }
