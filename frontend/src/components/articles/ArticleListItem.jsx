@@ -22,7 +22,7 @@ function ArticleListItem({ article, board }) {
 						<img src={setArticleUserImg()} alt="profile" />
 					</div>
 					<p>{username} ⋅ </p>
-					<p className={style.created}>{created_at.slice(0, 10)}</p>
+					<p className={style.created}>{created_at.slice(5, 10)}</p>
 				</div>
 				<h3 className={style.title}>{title}</h3>
 				{image_url && (
