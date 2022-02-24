@@ -8,7 +8,7 @@ import { createFormData } from "utils/articleAxios";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
-function ArticleCreateForm({ invertFormStatus, boardId, getArticlesAfterCreate }) {
+function ArticleCreateForm({ boardId, getArticlesAfterCreate }) {
 	const user = useSelector((state) => state.userInfo.apt_house);
 	const [articleData, setArticleData] = useState({ title: "", content: "" });
 	const [imgFile, setImgFile] = useState(null);
@@ -28,7 +28,6 @@ function ArticleCreateForm({ invertFormStatus, boardId, getArticlesAfterCreate }
 				.then(() => {
 					setArticleData({ title: "", content: "" });
 					setImgFile({});
-					invertFormStatus();
 					getArticlesAfterCreate();
 				})
 				.catch((err) => console.log(err.response));
@@ -42,15 +41,14 @@ function ArticleCreateForm({ invertFormStatus, boardId, getArticlesAfterCreate }
 	};
 
 	const handleImageChange = (e) => {
-		e.preventDefault();
-		if (e.target.files && e.target.files[0].size > 200 * 1024 * 1024) {
-			alert("200MB 이상의 이미지 파일은 등록할 수 없습니다.");
-			e.target.value = null;
-			return;
-		}
-		if (e.target.files) {
-			const uploadFile = e.target.files[0];
-			setImgFile(uploadFile);
+		const image = e.target.files;
+		if (image) {
+			if (image[0].size > 200 * 1024 * 1024) {
+				alert("200MB 이상의 이미지 파일은 등록할 수 없습니다.");
+				e.target.value = null;
+				return;
+			}
+			setImgFile(image[0]);
 		}
 	};
 

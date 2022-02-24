@@ -20,11 +20,7 @@ function ArticleCreate({ boardId }) {
 	};
 
 	return formOpen ? (
-		<ArticleCreateForm
-			invertFormStatus={invertFormStatus}
-			boardId={boardId}
-			getArticlesAfterCreate={getArticlesAfterCreate}
-		/>
+		<ArticleCreateForm boardId={boardId} getArticlesAfterCreate={getArticlesAfterCreate} />
 	) : (
 		<div onClick={invertFormStatus} className={style.closed}>
 			<p className={style.closed_msg}>새 글을 작성해주세요!</p>
