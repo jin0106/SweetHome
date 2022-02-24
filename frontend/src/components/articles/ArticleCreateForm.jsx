@@ -5,6 +5,7 @@ import style from "style/articles/ArticleCreate.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import { createFormData } from "utils/articleAxios";
+import { setImage } from "utils/setImage";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -41,15 +42,7 @@ function ArticleCreateForm({ boardId, invertFormStatus, getArticlesAfterCreate }
 	};
 
 	const handleImageChange = (e) => {
-		const image = e.target.files;
-		if (image) {
-			if (image[0].size > 200 * 1024 * 1024) {
-				alert("200MB 이상의 이미지 파일은 등록할 수 없습니다.");
-				e.target.value = null;
-				return;
-			}
-			setImgFile(image[0]);
-		}
+		setImage(e, setImgFile);
 	};
 
 	return (

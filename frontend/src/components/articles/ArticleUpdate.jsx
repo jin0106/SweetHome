@@ -7,6 +7,7 @@ import style from "style/articles/ArticleCreate.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import { createFormData } from "utils/articleAxios";
+import { setImage } from "utils/setImage";
 
 function ArticleUpdate() {
 	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -59,11 +60,7 @@ function ArticleUpdate() {
 	};
 
 	const handleImageChange = (e) => {
-		e.preventDefault();
-		if (e.target.files) {
-			const uploadFile = e.target.files[0];
-			setImgFile(uploadFile);
-		}
+		setImage(e, setImgFile);
 	};
 
 	return (
