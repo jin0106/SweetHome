@@ -7,7 +7,7 @@ import { faCamera } from "@fortawesome/free-solid-svg-icons";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
-function ArticleCreateForm({ invertDisabled, boardId, getArticlesAfterCreate }) {
+function ArticleCreateForm({ invertFormStatus, boardId, getArticlesAfterCreate }) {
 	const user = useSelector((state) => state.userInfo.apt_house);
 	const [articleData, setArticleData] = useState({ title: "", content: "" });
 	const [imgFile, setImgFile] = useState(null);
@@ -35,7 +35,7 @@ function ArticleCreateForm({ invertDisabled, boardId, getArticlesAfterCreate }) 
 				.then(() => {
 					setArticleData({ title: "", content: "" });
 					setImgFile({});
-					invertDisabled();
+					invertFormStatus();
 					getArticlesAfterCreate();
 				})
 				.catch((err) => console.log(err.response));
@@ -96,7 +96,7 @@ function ArticleCreateForm({ invertDisabled, boardId, getArticlesAfterCreate }) 
 						/>
 					</div>
 					<div className={style.btns}>
-						<button onClick={invertDisabled} type="button" className={style.outline_btn}>
+						<button onClick={invertFormStatus} type="button" className={style.outline_btn}>
 							취소
 						</button>
 						<button type="submit">작성</button>
