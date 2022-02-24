@@ -11,7 +11,7 @@ function ArticleCreate({ boardId }) {
 		setFormOpen(false);
 	}, [boardId]);
 
-	const invertDisabled = () => {
+	const invertFormStatus = () => {
 		setFormOpen((prev) => !prev);
 	};
 
@@ -21,12 +21,12 @@ function ArticleCreate({ boardId }) {
 
 	return formOpen ? (
 		<ArticleCreateForm
-			invertDisabled={invertDisabled}
 			boardId={boardId}
+			invertFormStatus={invertFormStatus}
 			getArticlesAfterCreate={getArticlesAfterCreate}
 		/>
 	) : (
-		<div onClick={invertDisabled} className={style.closed}>
+		<div onClick={invertFormStatus} className={style.closed}>
 			<p className={style.closed_msg}>새 글을 작성해주세요!</p>
 			<FontAwesomeIcon icon={faPen} color="#8f8f8f" />
 		</div>

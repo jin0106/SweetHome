@@ -14,6 +14,7 @@ import { persistor } from "index";
 import errorMessage from "store/errorMessage";
 import { cookieDelete } from "utils/manageToken";
 import ProfileUserInfoInput from "./ProfileUserInfoInput";
+import { setImage } from "utils/setImage";
 
 function ProfileUserInfo({ setIntro, intro, active, setActive }) {
 	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -89,16 +90,7 @@ function ProfileUserInfo({ setIntro, intro, active, setActive }) {
 	};
 
 	const setProfileImage = (e) => {
-		e.preventDefault();
-		if (e.target.files && e.target.files[0].size > 200 * 1024 * 1024) {
-			alert("200MB 이상의 이미지 파일은 등록할 수 없습니다.");
-			e.target.value = null;
-			return;
-		}
-		if (e.target.files) {
-			const uploadFile = e.target.files[0];
-			setFiles(uploadFile);
-		}
+		setImage(e, setFiles);
 	};
 
 	const deleteAccount = () => {

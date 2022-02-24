@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import style from "style/articles/ArticleCreate.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import { articleAxios, createFormData } from "utils/articleAxios";
+import { setImage } from "utils/setImage";
 
 function ArticleUpdate() {
 	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -19,42 +21,27 @@ function ArticleUpdate() {
 	const { title, content } = articleData;
 
 	useEffect(() => {
-		axios({
-			url: `${SERVER_URL}/api/apts/${user.apt.apt_id}/boards/articles/${articleId}`,
-			method: "get",
-		}).then((res) => {
-			setArticleData({ title: res.data.title, content: res.data.content });
-		});
+		getArticle();
 	}, []);
+
+	const getArticle = async () => {
+		const res = await articleAxios(user.apt.apt_id, articleId, "get");
+		setArticleData({ title: res.data.title, content: res.data.content });
+	};
 
 	const handleInputChange = (e) => {
 		setArticleData({ ...articleData, [e.target.id]: e.target.value });
 	};
 
-	const handleFormSubmit = (e) => {
+	const handleFormSubmit = async (e) => {
 		e.preventDefault();
-
-		const formData = new FormData();
-		formData.append(
-			"article",
-			new Blob([JSON.stringify(articleData)], { type: "application/json" }),
-		);
-		imgFile
-			? formData.append("image", imgFile)
-			: formData.append("image", new Blob([]), { type: "multipart/form-data" });
+		const formData = createFormData(articleData, imgFile);
 
 		if (title.trim() && content.trim()) {
-			axios({
-				url: `${SERVER_URL}/api/apts/${user.apt.apt_id}/boards/articles/${articleId}`,
-				method: "put",
-				data: formData,
-			})
-				.then(() => {
-					setArticleData({ title: "", content: "" });
-					setImgFile("");
-					navigate(-1);
-				})
-				.catch((err) => console.log(err.response));
+			articleAxios(user.apt.apt_id, articleId, "put", formData);
+			setArticleData({ title: "", content: "" });
+			setImgFile("");
+			navigate(-1);
 		} else {
 			alert("제목과 내용 모두 입력해주세요!");
 		}
@@ -65,11 +52,7 @@ function ArticleUpdate() {
 	};
 
 	const handleImageChange = (e) => {
-		e.preventDefault();
-		if (e.target.files) {
-			const uploadFile = e.target.files[0];
-			setImgFile(uploadFile);
-		}
+		setImage(e, setImgFile);
 	};
 
 	return (

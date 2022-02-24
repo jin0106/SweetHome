@@ -4,27 +4,21 @@ import { useSelector } from "react-redux";
 import style from "style/articles/ArticleCreate.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import { createFormData } from "utils/articleAxios";
+import { setImage } from "utils/setImage";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
-function ArticleCreateForm({ invertDisabled, boardId, getArticlesAfterCreate }) {
+function ArticleCreateForm({ boardId, invertFormStatus, getArticlesAfterCreate }) {
 	const user = useSelector((state) => state.userInfo.apt_house);
 	const [articleData, setArticleData] = useState({ title: "", content: "" });
 	const [imgFile, setImgFile] = useState(null);
 	const { title, content } = articleData;
 
-	const handleFormSubmit = (e) => {
+	const handleFormSubmit = async (e) => {
 		e.preventDefault();
 
-		const formData = new FormData();
-		formData.append(
-			"article",
-			new Blob([JSON.stringify(articleData)], { type: "application/json" }),
-		);
-
-		imgFile
-			? formData.append("image", imgFile)
-			: formData.append("image", new Blob([]), { type: "multipart/form-data" });
+		const formData = await createFormData(articleData, imgFile);
 
 		if (title.trim() && content.trim()) {
 			axios({
@@ -35,7 +29,6 @@ function ArticleCreateForm({ invertDisabled, boardId, getArticlesAfterCreate }) 
 				.then(() => {
 					setArticleData({ title: "", content: "" });
 					setImgFile({});
-					invertDisabled();
 					getArticlesAfterCreate();
 				})
 				.catch((err) => console.log(err.response));
@@ -49,16 +42,7 @@ function ArticleCreateForm({ invertDisabled, boardId, getArticlesAfterCreate }) 
 	};
 
 	const handleImageChange = (e) => {
-		e.preventDefault();
-		if (e.target.files && e.target.files[0].size > 200 * 1024 * 1024) {
-			alert("200MB 이상의 이미지 파일은 등록할 수 없습니다.");
-			e.target.value = null;
-			return;
-		}
-		if (e.target.files) {
-			const uploadFile = e.target.files[0];
-			setImgFile(uploadFile);
-		}
+		setImage(e, setImgFile);
 	};
 
 	return (
@@ -96,7 +80,7 @@ function ArticleCreateForm({ invertDisabled, boardId, getArticlesAfterCreate }) 
 						/>
 					</div>
 					<div className={style.btns}>
-						<button onClick={invertDisabled} type="button" className={style.outline_btn}>
+						<button onClick={invertFormStatus} type="button" className={style.outline_btn}>
 							취소
 						</button>
 						<button type="submit">작성</button>

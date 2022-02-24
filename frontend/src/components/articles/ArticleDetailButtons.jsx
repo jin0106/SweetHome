@@ -1,26 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
 import { SET_REPORT } from "store/report";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import style from "style/articles/ArticleDetailButtons.module.css";
 import { SET_MESSAGE } from "store/message";
+import { articleAxios } from "utils/articleAxios";
 
 function ArticleDetailButtons({ article, articleId }) {
-	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-	const username = useSelector((state) => state.userInfo.username);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const username = useSelector((state) => state.userInfo.username);
 	const userApt = useSelector((state) => state.userInfo.apt_house);
 
-	const handleDeleteButtonClick = async () => {
+	const handleDeleteButtonClick = () => {
 		if (window.confirm("글을 삭제 하시겠습니까?")) {
-			axios({
-				url: `${SERVER_URL}/api/apts/${userApt.apt.apt_id}/boards/articles/${articleId}`,
-				method: "delete",
-			}).then(() => {
-				navigate(-1);
-			});
+			articleAxios(userApt.apt.apt_id, articleId, "delete");
+			navigate(-1);
 		}
 	};
 
