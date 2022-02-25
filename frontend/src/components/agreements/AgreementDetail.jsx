@@ -49,7 +49,7 @@ function AgreementDetail() {
 		axios({
 			url: `${SERVER_URL}/api/admin/agreements/${agreementId}`,
 			method: "delete",
-		}).then((res) => {
+		}).then(() => {
 			navigate(-1);
 		});
 	};

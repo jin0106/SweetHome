@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import errorMessage from "store/errorMessage";
 import style from "style/AgreementCreate.module.css";
 import { useNavigate } from "react-router-dom";
 
@@ -30,19 +29,15 @@ function AgreementCreate(props) {
 					start_date: `${start_date}T00:00:00`,
 					end_date: `${end_date}T23:59:59`,
 				},
-			})
-				.then(() => {
-					setAgreementData({
-						title: "",
-						content: "",
-						start_date: "",
-						end_date: "",
-					});
-					navigate(-1);
-				})
-				.catch((err) => {
-					errorMessage(err.response);
+			}).then(() => {
+				setAgreementData({
+					title: "",
+					content: "",
+					start_date: "",
+					end_date: "",
 				});
+				navigate(-1);
+			});
 		} else {
 			alert("동의서 제목, 내용, 시작 날짜, 종료 날짜를 모두 입력해주세요.");
 		}
