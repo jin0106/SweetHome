@@ -4,7 +4,7 @@ import style from "style/AgreementCreate.module.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-function AgreementCreate(props) {
+function AgreementCreate() {
 	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 	const navigate = useNavigate();
 	const [agreementData, setAgreementData] = useState({

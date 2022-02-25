@@ -5,8 +5,6 @@ import AgreementsPagination from "./AgreementsPagination";
 import { authorityCheck } from "utils/authority";
 import style from "style/Admin.module.css";
 import { useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import AgreementCreate from "./AgreementCreate";
 
 function Agreements({ newAgreement }) {
