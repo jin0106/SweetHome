@@ -21,3 +21,11 @@ export function createFormData(articleData, imgFile) {
 
 	return formData;
 }
+
+export function articleLikeAxios(aptId, articleId, method) {
+	const response = axios({
+		url: `${SERVER_URL}/api/apts/${aptId}/articles/${articleId}/likes`,
+		method,
+	});
+	return response;
+}

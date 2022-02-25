@@ -11,51 +11,39 @@ import { useSelector } from "react-redux";
 import anonymous from "assets/anonymous.jpg";
 import { useDispatch } from "react-redux";
 import { SET_ARTICLE_NUM } from "store/comment";
-import { articleAxios } from "utils/articleAxios";
+import { articleAxios, articleLikeAxios } from "utils/articleAxios";
 
 function ArticleDetail() {
-	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 	const location = useLocation();
+	const dispatch = useDispatch();
 	const articleId = location.state.articleId;
 	const board = location.state.board;
 	const [article, setArticle] = useState();
 	const [isLiked, setIsLiked] = useState();
 	const [comment, setComment] = useState(0);
 	const user = useSelector((state) => state.userInfo.apt_house);
-	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(SET_ARTICLE_NUM(articleId));
 		getArticle();
-		getIsLiked();
+		getArticleLiked();
 	}, [isLiked, comment]);
-
-	const getIsLiked = () => {
-		axios({
-			url: `${SERVER_URL}/api/apts/${user.apt.apt_id}/articles/${articleId}/likes`,
-			method: "get",
-		}).then((res) => {
-			setIsLiked(res.data.is_liked);
-		});
-	};
 
 	const getArticle = async () => {
 		const res = await articleAxios(user.apt.apt_id, articleId, "get");
-		if (res) {
-			setArticle(res.data);
-			setComment(res.data.total_replies);
-		}
+		setArticle(res.data);
+		setComment(res.data.total_replies);
 	};
 
-	const handleHeartClick = () => {
-		const method = isLiked ? "delete" : "post";
+	const getArticleLiked = async () => {
+		const res = await articleLikeAxios(user.apt.apt_id, articleId, "get");
+		setIsLiked(res.data.is_liked);
+	};
 
-		axios({
-			url: `${SERVER_URL}/api/apts/${user.apt.apt_id}/articles/${articleId}/likes`,
-			method: method,
-		}).then(() => {
-			setIsLiked((prev) => !prev);
-		});
+	const handleHeartClick = async () => {
+		const method = isLiked ? "delete" : "post";
+		await articleLikeAxios(user.apt.apt_id, articleId, method);
+		setIsLiked((prev) => !prev);
 	};
 
 	const setArticleUserImg = () => {
