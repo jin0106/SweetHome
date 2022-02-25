@@ -10,8 +10,7 @@ function ArticleListItem({ article, board }) {
 		article;
 
 	const setArticleUserImg = () => {
-		const articleUserImg = article.user_image ? article.user_image : anonymous;
-		return articleUserImg;
+		return article.user_image ? article.user_image : anonymous;
 	};
 
 	return (

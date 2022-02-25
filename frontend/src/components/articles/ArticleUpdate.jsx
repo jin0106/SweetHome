@@ -33,6 +33,10 @@ function ArticleUpdate() {
 		setArticleData({ ...articleData, [e.target.id]: e.target.value });
 	};
 
+	const handleImageChange = (e) => {
+		setImage(e, setImgFile);
+	};
+
 	const handleFormSubmit = async (e) => {
 		e.preventDefault();
 		const formData = createFormData(articleData, imgFile);
@@ -49,10 +53,6 @@ function ArticleUpdate() {
 
 	const handleCancelButtonClick = () => {
 		navigate(-1);
-	};
-
-	const handleImageChange = (e) => {
-		setImage(e, setImgFile);
 	};
 
 	return (

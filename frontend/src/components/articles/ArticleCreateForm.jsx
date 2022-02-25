@@ -25,13 +25,11 @@ function ArticleCreateForm({ boardId, invertFormStatus, getArticlesAfterCreate }
 				url: `${SERVER_URL}/api/apts/${user.apt.apt_id}/boards/${boardId}/articles`,
 				method: "post",
 				data: formData,
-			})
-				.then(() => {
-					setArticleData({ title: "", content: "" });
-					setImgFile({});
-					getArticlesAfterCreate();
-				})
-				.catch((err) => console.log(err.response));
+			}).then(() => {
+				setArticleData({ title: "", content: "" });
+				setImgFile({});
+				getArticlesAfterCreate();
+			});
 		} else {
 			alert("제목과 내용 모두 입력하세요!");
 		}
