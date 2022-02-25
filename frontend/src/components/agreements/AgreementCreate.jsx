@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import style from "style/AgreementCreate.module.css";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function AgreementCreate(props) {
 	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -17,7 +18,8 @@ function AgreementCreate(props) {
 	const handleFormSubmit = (e) => {
 		e.preventDefault();
 		if (start_date > end_date) {
-			alert("날짜를 확인해주세요");
+			toast.error("날짜를 확인해주세요");
+			return;
 		}
 		if (title.trim() && content.trim() && start_date && end_date) {
 			axios({
