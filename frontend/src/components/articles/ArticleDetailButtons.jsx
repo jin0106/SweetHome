@@ -12,9 +12,9 @@ function ArticleDetailButtons({ article, articleId }) {
 	const username = useSelector((state) => state.userInfo.username);
 	const userApt = useSelector((state) => state.userInfo.apt_house);
 
-	const handleDeleteButtonClick = () => {
+	const handleDeleteButtonClick = async () => {
 		if (window.confirm("글을 삭제 하시겠습니까?")) {
-			articleAxios(userApt.apt.apt_id, articleId, "delete");
+			await articleAxios(userApt.apt.apt_id, articleId, "delete");
 			navigate(-1);
 		}
 	};
