@@ -2,6 +2,15 @@ import axios from "axios";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
+export function articlePostAxios(aptId, boardId, data) {
+	const response = axios({
+		url: `${SERVER_URL}/api/apts/${aptId}/boards/${boardId}/articles`,
+		method: "post",
+		data,
+	});
+	return response;
+}
+
 export function articleAxios(aptId, articleId, method, data = "") {
 	const response = axios({
 		url: `${SERVER_URL}/api/apts/${aptId}/boards/articles/${articleId}`,
