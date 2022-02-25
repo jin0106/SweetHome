@@ -54,9 +54,9 @@ public class ArticleDeleteService {
             .orElseThrow(() -> new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_ID));
         article.checkArticleByEmail(email);
 
-        if (Objects.nonNull(article.getImageUrl())) {
-            imageUploader.deleteFile(article.getImageUrl());
-        }
+//        if (Objects.nonNull(article.getImageUrl())) {
+//            imageUploader.deleteFile(article.getImageUrl());
+//        }
         cascadeDeleteArticle(articleId);
     }
 
