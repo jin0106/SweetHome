@@ -115,9 +115,9 @@ public class ArticleService {
             .orElseThrow(() -> new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_ID));
         article.checkArticleByEmail(email);
 
-        if (Objects.nonNull(article.getImageUrl())) {
-            imageUploader.deleteFile(article.getImageUrl());
-        }
+//        if (Objects.nonNull(article.getImageUrl())) {
+//            imageUploader.deleteFile(article.getImageUrl());
+//        }
 
         article.changeTitle(request.getTitle());
         article.changeContent(request.getContent());
