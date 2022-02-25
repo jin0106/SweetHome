@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import style from "style/articles/ArticleCreate.module.css";
@@ -10,14 +9,13 @@ import { articleAxios, createFormData } from "utils/articleAxios";
 import { setImage } from "utils/setImage";
 
 function ArticleUpdate() {
-	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 	const location = useLocation();
-	const articleId = location.state.articleId;
 	const navigate = useNavigate();
+	const articleId = location.state.articleId;
 	const user = useSelector((state) => state.userInfo.apt_house);
-
 	const [articleData, setArticleData] = useState({ title: "", content: "" });
 	const [imgFile, setImgFile] = useState("");
+
 	const { title, content } = articleData;
 
 	useEffect(() => {

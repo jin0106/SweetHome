@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
 import Comments from "../comments/Comments";
 import ArticleDetailButtons from "./ArticleDetailButtons";
 import style from "style/articles/ArticleDetail.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as fasHeart } from "@fortawesome/free-solid-svg-icons";
-import { faComment, faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
+import { faComment } from "@fortawesome/free-regular-svg-icons";
 import { useSelector } from "react-redux";
 import anonymous from "assets/anonymous.jpg";
 import { useDispatch } from "react-redux";
@@ -18,10 +17,11 @@ function ArticleDetail() {
 	const dispatch = useDispatch();
 	const articleId = location.state.articleId;
 	const board = location.state.board;
+	const user = useSelector((state) => state.userInfo.apt_house);
+
 	const [article, setArticle] = useState();
 	const [isLiked, setIsLiked] = useState();
 	const [comment, setComment] = useState(0);
-	const user = useSelector((state) => state.userInfo.apt_house);
 
 	useEffect(() => {
 		dispatch(SET_ARTICLE_NUM(articleId));
