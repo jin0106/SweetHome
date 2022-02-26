@@ -1,11 +1,10 @@
 import { useState } from "react";
-import axios from "axios";
-import errorMessage from "store/errorMessage";
 import style from "style/AgreementCreate.module.css";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { postAgreementAxios } from "utils/agreementAxios";
 
-function AgreementCreate(props) {
-	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+function AgreementCreate() {
 	const navigate = useNavigate();
 	const [agreementData, setAgreementData] = useState({
 		title: "",
@@ -15,34 +14,21 @@ function AgreementCreate(props) {
 	});
 	const { title, content, start_date, end_date } = agreementData;
 
-	const handleFormSubmit = (e) => {
+	const handleFormSubmit = async (e) => {
 		e.preventDefault();
 		if (start_date > end_date) {
-			alert("날짜를 확인해주세요");
+			toast.error("날짜를 확인해주세요");
+			return;
 		}
 		if (title.trim() && content.trim() && start_date && end_date) {
-			axios({
-				url: `${SERVER_URL}/api/admin/agreements`,
-				method: "post",
-				data: {
-					title,
-					content,
-					start_date: `${start_date}T00:00:00`,
-					end_date: `${end_date}T23:59:59`,
-				},
-			})
-				.then(() => {
-					setAgreementData({
-						title: "",
-						content: "",
-						start_date: "",
-						end_date: "",
-					});
-					navigate(-1);
-				})
-				.catch((err) => {
-					errorMessage(err.response);
-				});
+			await postAgreementAxios("post", agreementData);
+			setAgreementData({
+				title: "",
+				content: "",
+				start_date: "",
+				end_date: "",
+			});
+			navigate(-1);
 		} else {
 			alert("동의서 제목, 내용, 시작 날짜, 종료 날짜를 모두 입력해주세요.");
 		}

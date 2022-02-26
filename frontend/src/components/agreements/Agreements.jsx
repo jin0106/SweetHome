@@ -1,20 +1,20 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AgreementsPagination from "./AgreementsPagination";
 import { authorityCheck } from "utils/authority";
 import style from "style/Admin.module.css";
 import { useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import AgreementCreate from "./AgreementCreate";
+import { getAgreementAxios } from "utils/agreementAxios";
 
-function Agreements({ newAgreement }) {
-	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+function Agreements() {
 	const [data, setData] = useState({ agreements: [], totalPage: 0, currentPage: 0 });
 	const { agreements, totalPage, currentPage } = data;
 	const authority = useSelector((state) => state.userInfo.authority);
 	const today = new Date();
+
+	useEffect(() => {
+		getAgreements();
+	}, [currentPage]);
 
 	const agreementProgress = (start_date, end_date) => {
 		if (new Date(start_date) > today) {
@@ -26,35 +26,15 @@ function Agreements({ newAgreement }) {
 		}
 	};
 
-	const getAgreementsPage1 = () => {
-		axios({
-			url: `${SERVER_URL}/api/agreements`,
-			method: "get",
-		}).then((res) => {
-			setData((prev) => ({
-				...prev,
-				agreements: res.data.agreements,
-				totalPage: res.data.total_page_count,
-				currentPage: res.data.current_page_count,
-			}));
-		});
+	const getAgreements = async () => {
+		const res = await getAgreementAxios(currentPage);
+		setData((prev) => ({
+			...prev,
+			agreements: res.data.agreements,
+			totalPage: res.data.total_page_count,
+			currentPage: res.data.current_page_count,
+		}));
 	};
-
-	if (newAgreement) getAgreementsPage1();
-
-	useEffect(() => {
-		axios({
-			url: `${SERVER_URL}/api/agreements?page=${currentPage}&size=10`,
-			method: "get",
-		}).then((res) => {
-			setData((prev) => ({
-				...prev,
-				agreements: res.data.agreements,
-				totalPage: res.data.total_page_count,
-				currentPage: res.data.current_page_count,
-			}));
-		});
-	}, [currentPage]);
 
 	return (
 		<div>
@@ -110,9 +90,6 @@ function Agreements({ newAgreement }) {
 					)}
 				</tbody>
 			</table>
-			<div style={{ display: "none" }}>
-				<AgreementCreate getAgreementsPage1={getAgreementsPage1} />
-			</div>
 			{agreements.length > 0 && (
 				<footer>
 					<AgreementsPagination page={currentPage} total={totalPage} setData={setData} />

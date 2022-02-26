@@ -1,13 +1,11 @@
 import { useState } from "react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import style from "style/articles/ArticleCreate.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import { createFormData } from "utils/articleAxios";
 import { setImage } from "utils/setImage";
-
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+import { articlePostAxios } from "utils/articleAxios";
 
 function ArticleCreateForm({ boardId, invertFormStatus, getArticlesAfterCreate }) {
 	const user = useSelector((state) => state.userInfo.apt_house);
@@ -21,17 +19,10 @@ function ArticleCreateForm({ boardId, invertFormStatus, getArticlesAfterCreate }
 		const formData = await createFormData(articleData, imgFile);
 
 		if (title.trim() && content.trim()) {
-			axios({
-				url: `${SERVER_URL}/api/apts/${user.apt.apt_id}/boards/${boardId}/articles`,
-				method: "post",
-				data: formData,
-			})
-				.then(() => {
-					setArticleData({ title: "", content: "" });
-					setImgFile({});
-					getArticlesAfterCreate();
-				})
-				.catch((err) => console.log(err.response));
+			await articlePostAxios(user.apt.apt_id, boardId, formData);
+			setArticleData({ title: "", content: "" });
+			setImgFile({});
+			getArticlesAfterCreate();
 		} else {
 			alert("제목과 내용 모두 입력하세요!");
 		}

@@ -1,57 +1,45 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { authorityCheck } from "utils/authority";
 import style from "style/AgreementDetail.module.css";
+import { agreementDetailAxios, deleteAgreementAxios } from "utils/agreementAxios";
 
 function AgreementDetail() {
 	const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 	const location = useLocation();
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.userInfo);
+	const authority = useSelector((state) => state.userInfo.authority);
 	const agreementId = location.state.id;
 	const progress = location.state.progress;
 	const [agreement, setAgreement] = useState("");
 	const [agreementStatus, setAgreementStatus] = useState("");
 	const today = new Date();
-	const authority = useSelector((state) => state.userInfo.authority);
 
 	useEffect(() => {
-		axios({
-			url: `${SERVER_URL}/api/agreements/${agreementId}`,
-			method: "get",
-		}).then((res) => {
-			setAgreement(res.data);
-		});
+		getAgreementStatus();
 	}, []);
 
-	const handleFormSubmit = (e) => {
+	const getAgreementStatus = async () => {
+		const res = await agreementDetailAxios("get", agreementId);
+		setAgreement(res.data);
+	};
+
+	const handleFormSubmit = async (e) => {
 		e.preventDefault();
-		axios({
-			url: `${SERVER_URL}/api/agreements/${agreementId}`,
-			method: "post",
-			data: { agreement_status: agreementStatus },
-		})
-			.then((res) => {
-				console.log(res);
-				setAgreementStatus("");
-				navigate("/agreements");
-			})
-			.catch((err) => console.log(err.response));
+		await agreementDetailAxios("post", agreementId, { agreement_status: agreementStatus });
+		setAgreementStatus("");
+		navigate("/agreements");
 	};
 
 	const handleInputChange = (e) => {
 		e.target.value === "agree" ? setAgreementStatus(true) : setAgreementStatus(false);
 	};
 
-	const handleDeleteButtonClick = () => {
-		axios({
-			url: `${SERVER_URL}/api/admin/agreements/${agreementId}`,
-			method: "delete",
-		}).then((res) => {
-			navigate(-1);
-		});
+	const handleDeleteButtonClick = async () => {
+		await deleteAgreementAxios(agreementId);
+		navigate(-1);
 	};
 
 	const isInProgress = () => {
@@ -75,11 +63,11 @@ function AgreementDetail() {
 					<p className={style.user_info}>
 						{user.apt_house.dong} 동 {user.apt_house.ho} 호 {user.username}
 					</p>
-					{today && (
-						<p className={style.date}>
-							{today.getFullYear()}년 {today.getMonth() + 1}월 {today.getDate()}일
-						</p>
-					)}
+
+					<p className={style.date}>
+						{today.getFullYear()}년 {today.getMonth() + 1}월 {today.getDate()}일
+					</p>
+
 					{authorityCheck(authority) === 3 ? (
 						<button onClick={handleDeleteButtonClick} className={style.btn}>
 							삭제
