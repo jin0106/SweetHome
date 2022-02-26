@@ -2,7 +2,7 @@ import { useState } from "react";
 import style from "style/AgreementCreate.module.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { agreementAxios } from "utils/agreementAxios";
+import { postAgreementAxios } from "utils/agreementAxios";
 
 function AgreementCreate() {
 	const navigate = useNavigate();
@@ -21,7 +21,7 @@ function AgreementCreate() {
 			return;
 		}
 		if (title.trim() && content.trim() && start_date && end_date) {
-			await agreementAxios("post", agreementData);
+			await postAgreementAxios("post", agreementData);
 			setAgreementData({
 				title: "",
 				content: "",
