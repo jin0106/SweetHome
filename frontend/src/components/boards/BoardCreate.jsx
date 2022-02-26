@@ -15,6 +15,22 @@ function CreateBoard(props) {
 		setBoardInfo({ ...boardInfo, [e.target.id]: e.target.value });
 	};
 
+	const handleFormSubmit = (e) => {
+		e.preventDefault();
+		if (name.trim() && description.trim()) {
+			axios({
+				url: `${SERVER_URL}/api/apts/${user.apt.apt_id}/boards`,
+				method: "post",
+				data: boardInfo,
+			}).then(() => {
+				setBoardInfo({ name: "", description: "" });
+			});
+		} else {
+			alert("게시판명과 소개글을 모두 입력해주세요!");
+		}
+		onCancel();
+	};
+
 	const customStyles = {
 		content: {
 			top: "50%",
@@ -24,25 +40,6 @@ function CreateBoard(props) {
 			transform: "translate(-50%, -50%)",
 			textAlign: "center",
 		},
-	};
-	const handleFormSubmit = (e) => {
-		e.preventDefault();
-		if (name.trim() && description.trim()) {
-			axios({
-				url: `${SERVER_URL}/api/apts/${user.apt.apt_id}/boards`,
-				method: "post",
-				data: boardInfo,
-			})
-				.then(() => {
-					setBoardInfo({ name: "", description: "" });
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		} else {
-			alert("게시판명과 소개글을 모두 입력해주세요!");
-		}
-		onCancel();
 	};
 
 	return (
